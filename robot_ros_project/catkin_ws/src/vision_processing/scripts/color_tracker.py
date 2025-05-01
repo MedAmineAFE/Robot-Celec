@@ -1,0 +1,1 @@
+# Placeholder content for color_tracker.py

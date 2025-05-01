@@ -1,0 +1,1 @@
+# Placeholder content for object_detector.py
