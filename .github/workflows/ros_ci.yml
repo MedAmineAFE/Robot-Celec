@@ -1,0 +1,33 @@
+name: ROS CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Utilise Ubuntu comme environnement de base dans GitHub Actions
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup ROS environment
+        uses: ros-tooling/setup-ros@v0.6
+        with:
+          required-ros-distributions: noetic  # Utilisation de ROS Noetic compatible avec Debian 11 64 bits
+
+      - name: Build workspace
+        run: |
+          cd robot_ros_project/catkin_ws
+          rosdep update
+          rosdep install --from-paths src --ignore-src -r -y
+          source /opt/ros/$ROS_DISTRO/setup.bash
+          catkin_make
+
+      - name: Run tests
+        run: |
+          cd robot_ros_project/catkin_ws
+          source devel/setup.bash
+          catkin_make run_tests
+          catkin_test_results
